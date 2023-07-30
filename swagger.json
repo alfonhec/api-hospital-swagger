@@ -1,0 +1,277 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Hospital",
+      "description": "API de gestión de pacientes y signos vitales",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:6100",
+        "description": "Servidor de Homologacion"
+      }
+    ],
+    "paths": {
+      "/pacientes": {
+        "get": {
+          "summary": "Obtener todos los pacientes",
+          "responses": {
+            "200": {
+              "description": "Lista de pacientes",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Paciente"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al obtener los pacientes"
+            }
+          }
+        },
+        "post": {
+          "summary": "Agregar un nuevo paciente",
+          "requestBody": {
+            "description": "Datos del nuevo paciente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PacienteInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Paciente agregado exitosamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Paciente"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al agregar un nuevo paciente"
+            }
+          }
+        }
+      },
+      "/pacientes/{id}": {
+        "put": {
+          "summary": "Editar información de un paciente",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID del paciente",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Nuevos datos del paciente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PacienteInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Paciente actualizado exitosamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Paciente"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Paciente no encontrado"
+            },
+            "500": {
+              "description": "Error al editar el paciente"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Eliminar información de un paciente y sus signos vitales",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID del paciente",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Paciente eliminado exitosamente"
+            },
+            "500": {
+              "description": "Error al eliminar el paciente"
+            }
+          }
+        }
+      },
+      "/pacientes/{id}/signos-vitales": {
+        "post": {
+          "summary": "Agregar signos vitales a un paciente",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID del paciente",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Datos de los signos vitales",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignosVitalesInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Signos vitales agregados exitosamente",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SignosVitales"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error al agregar signos vitales"
+            }
+          }
+        }
+      },
+      "/pacientes/{id}/signos-vitales/delete": {
+        "delete": {
+          "summary": "Eliminar signos vitales de un paciente",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID del paciente",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Signos vitales eliminados exitosamente"
+            },
+            "500": {
+              "description": "Error al eliminar signos vitales"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Paciente": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "nombre": {
+              "type": "string"
+            },
+            "apellido": {
+              "type": "string"
+            },
+            "diagnostico": {
+              "type": "string"
+            },
+            "fecha_ingreso": {
+              "type": "string",
+              "format": "date"
+            },
+            "fecha_salida": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "PacienteInput": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string"
+            },
+            "apellido": {
+              "type": "string"
+            },
+            "diagnostico": {
+              "type": "string"
+            },
+            "fecha_ingreso": {
+              "type": "string",
+              "format": "date"
+            },
+            "fecha_salida": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "required": ["nombre", "apellido", "diagnostico"]
+        },
+        "SignosVitales": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "presion_arterial": {
+              "type": "string"
+            },
+            "ritmo_cardiaco": {
+              "type": "integer"
+            }
+          }
+        },
+        "SignosVitalesInput": {
+          "type": "object",
+          "properties": {
+            "presion_arterial": {
+              "type": "string"
+            },
+            "ritmo_cardiaco": {
+              "type": "integer"
+            }
+          },
+          "required": ["presion_arterial", "ritmo_cardiaco"]
+        }
+      }
+    }
+  }
+  
